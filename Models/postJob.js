@@ -21,11 +21,20 @@ const jobSchema = new Schema ({
         type : String,
         required : true 
     },
+    jobtype : {
+        type : String,
+        required : true
+    },
     owner : {
         type : Schema.Types.ObjectId,
         ref : 'Users'
+        
     }
-})
+},{
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    
+
+});
 const jobs = mongoose.model("jobs",jobSchema)
 
 export default jobs ;

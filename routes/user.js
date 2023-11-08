@@ -20,11 +20,10 @@ router.post("/signup",async(req,res)=>{
     try{
             // console.log(req.body)
         // const {email,name,password} = req.body
-        const hashpassword = await bcrypt.hash(req.body.password, 10);
+        const password = await bcrypt.hash(req.body.password, 10);
 
-        console.log("password------>",hashpassword)
         await userSchema.validateAsync(req.body)
-        const user = new User ({...req.body,hashpassword})
+        const user = new User ({ ...req.body , password})
         await user.save()
         const token = await jwt.sign({_id : user.id , email : user.email},'USAMA')
         res.status(200).send({"status" : "200 ok" ,"usermessage" :'user save successfuly', user ,token })
@@ -42,18 +41,19 @@ router.post("/login",async(req,res)=>{
         const {email,password} = req.body
         const user = await User.findOne({email})
 
-        const Userpassowrd = await bcrypt.compare(password, user.password)
-     
+        const Userpassowrd = await bcrypt.compare( password,user.password)
+        console.log(Userpassowrd)
+        console.log(password,user.password)
         if(!user){
                 res.status(400).send({"message": "user not registered!"})
         }
         if(Userpassowrd){
             const token = await jwt.sign({_id : user.id , email : user.email},'USAMA')
-            res.status(200).send({"status" : "200 ok" ,"user" :'user login successfuly' ,token })
+            res.status(200).send({"status" : "200 ok" ,"user" :'user login successfuly' ,token , 'id' : user.id })
         }
 
         if(!Userpassowrd){
-            res.status(400).send({"status" : "400" ,"user" :'Wrong Password' })
+            res.status(400).send({"status" : "400" ,"user" :'Wrong Password ' })
 
         }
         
@@ -66,5 +66,8 @@ router.post("/login",async(req,res)=>{
     }
 
 })
+
+
+
 
 export default router ;

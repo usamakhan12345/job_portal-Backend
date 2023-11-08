@@ -36,6 +36,18 @@ router.post("/post",async(req,res)=>{
 
 })
 
+router.post("/myjobs", async(req,res)=>{
+    try{
+        const id  = req.body.userId
+        console.log(id)
+        const myjobs = await Job.find({owner : id})
+        console.log(myjobs)
+            res.status(200).send({"staus": '200 ok' , myjobs})
+    }catch(err){
+        res.status(400).send({"message": err.message})
+    }
+})
+
 router.get("/alljobs", async(req,res)=>{
     try{
         const allJobs = await Job.find({}).select("-password").populate('owner','name email')

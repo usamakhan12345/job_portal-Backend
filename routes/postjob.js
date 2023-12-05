@@ -13,7 +13,8 @@ const jobSchema = joi.object({
        details : joi.string().required(),
        address : joi.string().required(),
        owner : joi.string().optional(),
-       jobtype : joi.string().required()
+       jobtype : joi.string().required(),
+       postTime : joi.string().required()
 
 
        

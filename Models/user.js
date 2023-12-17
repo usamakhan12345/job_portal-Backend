@@ -1,26 +1,41 @@
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema({
-    name : {
+    firstName : {
         type :String,
         required : true
     },
-    email : {
+    lastName : {
         type :String,
-        unique : true,
         required : true
     },
-    phone : {
+    course : {
         type :String,
         required : true
     },
     password : {
         type :String,
         required : true
+    },
+    email : {
+        type :String,
+        required : true,
+        unique : true,
+        
+    },
+    phoneNumber : {
+        type :String,
+        required : true
+    },
+    Image : {
+        type : String,
+        required : true
+
     }
+    
     
 })
 
-const user = mongoose.model('Users',userSchema)
+const student = mongoose.model('Students',userSchema)
 
-export default user ;
+export default student ;

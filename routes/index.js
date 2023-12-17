@@ -1,16 +1,17 @@
 import express from 'express'
-import user from "./user.js"
+import Students from "./user.js"
 import jobs from "./postjob.js"
-
+import upload from './upload.js'
 
 
 const router = express.Router()
 
 
 
-router.use('/user',user)
+router.use('/students',Students)
 router.use('/job',jobs)
-router.use('/profile')
+router.use('/upload',upload)
+// router.use('/profile')
 
 
 export default router

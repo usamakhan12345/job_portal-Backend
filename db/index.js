@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config()
 
 const connectDb = () =>{
     try{
-        mongoose.connect('mongodb+srv://usamakhan:usama123@cluster0.zau8mk3.mongodb.net/JobPortal?retryWrites=true&w=majority',{
+        mongoose.connect(process.env.DATABASEURL,{
             useNewUrlParser : true
         })
         console.log("Database connected successfuly !")

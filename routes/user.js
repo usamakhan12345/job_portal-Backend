@@ -108,69 +108,43 @@ router.get("/allstudents", async (req, res) => {
   }
 });
 
-router.post("/attendance", async(req, res) =>{
-    try {
-      const { studentId} = req.body;
-  
-      // Find the student by ID
-      const student = await User.findById(studentId);
-  
-      if (!student) {
-        return res.status(404).json({ message: 'Student not found.' });
-      }
-  
-      // Check if the student has already been marked present on the current day
-      const existingAttendanceRecord = await Attendance.findOne({
-        student: studentId,
-        date: { $gte: startOfDay(new Date()), $lte: endOfDay(new Date()) },
-      });
-  
-      if (existingAttendanceRecord) {
-        return res.status(400).json({ message: 'Attendance already marked for today.' });
-      }
-  
-      // Create a new attendance record
-      const attendanceRecord = new Attendance({
-        student: studentId,
-        status: 'present',
-      });
-  
-      // Save the attendance record
-      await attendanceRecord.save();
-  
-      // Update the student's attendance array with the new attendance record
-      student.attendance.push(attendanceRecord._id);
-      await student.save();
-  
-      return res.status(200).json({
-        message: 'Attendance marked successfully',
-        checkInTime: attendanceRecord.date,
-      });
-    } catch (err) {
-      return res.status(500).json({ message: 'Internal server error.', error: err.message });
-    }
-  },
- )
 
-router.post("/attendance/:id",async(req,res)=>{
+
+router.put("/updatestudent/:id",async(req,res)=>{
     try {
         const studentID = req.params.id;
-        console.log(studentID)
     
         const studentData = await User.findById(studentID);
-    
-        console.log(studentData)
-        await res.status(200).send({
-            staus: "200 ok",
-            message: "single user given suceessfuly",
-            studentData,
-          });
+
+        if(!studentData){
+          res.status(404).send({"messaage": "user not found"})
+        }
+        if(studentData){
+          const updateStudent = await User.findByIdAndUpdate(studentID , req.body , {
+            new : true
+          })
+          await res.status(200).send({
+              staus: "200 ok",
+              message: "Student Update  suceessfuly",
+              updateStudent,
+            });
+        } 
       } catch (err) {
         res.status(400).send({ message: err.message });
       }  
 })
 
+router.delete("/deletestudent/:id", async(req,res)=>{
+  try{
+      const studentID = req.params.id
+      const deleteStudent = await User.findByIdAndDelete(studentID)
+      console.log("deleteStudent--->", deleteStudent)
+      res.status(200).send({"message" : "user deleted successfuly" , deleteStudent})
 
+  }catch(err){
+      res.status(404).send({"message": err.messaage})
+  }
+})
 
 
 export default router;

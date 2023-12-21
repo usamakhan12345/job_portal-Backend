@@ -1,6 +1,7 @@
 import express from "express"
 import router from "./routes/index.js"
 import connectDb from "./db/index.js"
+import bodyParser from "body-parser"
 import cors from 'cors'
 
 const app = express()
@@ -8,7 +9,7 @@ const app = express()
 const PORT =3000
 connectDb()
 
-
+app.use(bodyParser.json());
 app.use(express.json())
 app.use(cors())
 

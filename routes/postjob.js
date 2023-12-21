@@ -11,7 +11,7 @@ const jobSchema = joi.object({
        salary : joi.string().required(),
        position: joi.string().required(),
        details : joi.string().required(),
-       address : joi.string().required(),
+       status : joi.string().required(),
        owner : joi.string().optional(),
        jobtype : joi.string().required(),
        postTime : joi.string().required()

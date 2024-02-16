@@ -3,7 +3,7 @@ import moment from "moment";
 const AttendanceSchema = new mongoose.Schema({
     student: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'Students',
         required: true,
     },
 

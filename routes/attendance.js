@@ -40,7 +40,7 @@ router.post("/checkedIn", async (req, res) => {
 
 
         }else if (student && checktype=== 'checkout' ) {
-            const stdCheckedIN = moment(Date.now()).format(' h:mm:ss a , MMMM Do YYYY')
+            const stdCheckedIN = moment(Date.now()).format(' h:mm:ss a , MMM Do YY')
             console.log(student)
             console.log(stdCheckedIN)
 
@@ -51,7 +51,7 @@ router.post("/checkedIn", async (req, res) => {
 
         }else {
             const stdAttendance = new Attendance({ ...req.body })
-            const stdCheckedIN = moment(Date.now()).format(' h:mm:ss a , MMMM Do YYYY')
+            const stdCheckedIN = moment(Date.now()).format(' h:mm:ss a , MMM Do YY')
             stdAttendance.checkInTime.push(stdCheckedIN)
 
             await stdAttendance.save()
@@ -84,5 +84,19 @@ router.put("/checkedIn", async (req, res) => {
     }
 })
 
+router.get("/getStudentAttendance/:id", async(req, res)=>{
+            try{
+
+                const stdId = req.params.id
+                const stdAttendance = await Attendance.findOne({student : stdId}).populate("student")
+                if(stdAttendance){
+                    res.status(200).send({"status" : "200" , "message" : "user attendance fetch successfuly" , stdAttendance})
+                }else{
+                    res.status(404).send({"status" : "404" , "message" : "not record any attendance"})
+                }
+            }catch(error){
+                console.log(error)
+            }
+})
 
 export default router;

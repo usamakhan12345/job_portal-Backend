@@ -16,7 +16,7 @@ const userSchema = joi.object({
 });
 
 router.post("/signup", async (req, res) => {
-  console.log(req.body.firstName);
+  // console.log(req.body.firstName);
   try {
     // console.log(req.body)
     // const {email,name,password} = req.body
@@ -40,9 +40,9 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { email, password } = req.body;
-    console.log(email, password);
+    // console.log(email, password);
     if (email === "admin@gmail.com" && password === "123456789") {
       const token = await jwt.sign({ email }, "USAMA");
       res.status(200).send({
@@ -57,6 +57,8 @@ router.post("/login", async (req, res) => {
       // console.log(Userpassowrd);
       // console.log(password, user.password);
       if (!user) {
+        res.setHeader("Content-Type", "application/json");
+
         res.status(400).send({ message: "user not registered!" });
       }
 
@@ -72,11 +74,13 @@ router.post("/login", async (req, res) => {
           id: user._id,
         });
       } else {
+        res.setHeader("Content-Type", "application/json");
         res.status(400).send({ status: "400", user: "Wrong Password " });
       }
     }
   } catch (err) {
     console.log(err);
+    res.setHeader("Content-Type", "application/json");
     res.status(400).send({ status: "400", err: err.message });
   }
 });
@@ -84,15 +88,15 @@ router.post("/login", async (req, res) => {
 router.get("/getstudent/:id", async (req, res) => {
   try {
     const studentID = req.params.id;
-    console.log(studentID)
+    // console.log(studentID);
 
     const studentData = await User.findById(studentID);
-    console.log(studentData)
+    // console.log(studentData);
     await res.status(200).send({
-        staus: "200 ok",
-        message: "single user given suceessfuly",
-        studentData,
-      });
+      staus: "200 ok",
+      message: "single user given suceessfuly",
+      studentData,
+    });
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
@@ -108,43 +112,45 @@ router.get("/allstudents", async (req, res) => {
   }
 });
 
+router.put("/updatestudent/:id", async (req, res) => {
+  try {
+    const studentID = req.params.id;
 
+    const studentData = await User.findById(studentID);
+    // console.log(studentData);
+    // console.log(req.body);
+    if (!studentData) {
+      res.status(404).send({ messaage: "user not found" });
+    }
+    if (studentData) {
+      const updateStudent = await User.findByIdAndUpdate(studentID, req.body, {
+        new: true,
+      });
+      const allStudents = await User.find({});
 
-router.put("/updatestudent/:id",async(req,res)=>{
-    try {
-        const studentID = req.params.id;
-    
-        const studentData = await User.findById(studentID);
-
-        if(!studentData){
-          res.status(404).send({"messaage": "user not found"})
-        }
-        if(studentData){
-          const updateStudent = await User.findByIdAndUpdate(studentID , req.body , {
-            new : true
-          })
-          await res.status(200).send({
-              staus: "200 ok",
-              message: "Student Update  suceessfuly",
-              updateStudent,
-            });
-        } 
-      } catch (err) {
-        res.status(400).send({ message: err.message });
-      }  
-})
-
-router.delete("/deletestudent/:id", async(req,res)=>{
-  try{
-      const studentID = req.params.id
-      const deleteStudent = await User.findByIdAndDelete(studentID)
-      console.log("deleteStudent--->", deleteStudent)
-      res.status(200).send({"message" : "user deleted successfuly" , deleteStudent})
-
-  }catch(err){
-      res.status(404).send({"message": err.messaage})
+      res.status(200).send({
+        staus: "200 ok",
+        message: "Student Update Successfuly",
+        updateStudent,
+        allStudents,
+      });
+    }
+  } catch (err) {
+    res.status(400).send({ message: err.message });
   }
-})
+});
 
+router.delete("/deletestudent/:id", async (req, res) => {
+  try {
+    const studentID = req.params.id;
+    const deleteStudent = await User.findByIdAndDelete(studentID);
+    // console.log("deleteStudent--->", deleteStudent);
+    res
+      .status(200)
+      .send({ message: "user deleted successfuly", deleteStudent });
+  } catch (err) {
+    res.status(404).send({ message: err.messaage });
+  }
+});
 
 export default router;

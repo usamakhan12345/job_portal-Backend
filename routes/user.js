@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
       if (!user) {
         res.setHeader("Content-Type", "application/json");
 
-        res.status(400).send({ message: "user not registered!" });
+       return res.status(400).send({ message: "user not registered!" });
       }
 
       if (user && user.password === password) {
@@ -75,13 +75,13 @@ router.post("/login", async (req, res) => {
         });
       } else {
         res.setHeader("Content-Type", "application/json");
-        res.status(400).send({ status: "400", user: "Wrong Password " });
+       return  res.status(400).send({ status: "400", user: "Wrong Password " });
       }
     }
   } catch (err) {
     console.log(err);
     res.setHeader("Content-Type", "application/json");
-    res.status(400).send({ status: "400", err: err.message });
+    return res.status(400).send({ status: "400", err: err.message });
   }
 });
 
@@ -92,13 +92,13 @@ router.get("/getstudent/:id", async (req, res) => {
 
     const studentData = await User.findById(studentID);
     // console.log(studentData);
-    await res.status(200).send({
+    return await res.status(200).send({
       staus: "200 ok",
       message: "single user given suceessfuly",
       studentData,
     });
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    return res.status(400).send({ message: err.message });
   }
 });
 
@@ -108,7 +108,7 @@ router.get("/allstudents", async (req, res) => {
     res.status(200).send({ staus: "200 ok", allStudents });
   } catch (error) {
     console.log(error);
-    res.send(404).send({ message: "error", error });
+   res.send(404).send({ message: "error", error });
   }
 });
 

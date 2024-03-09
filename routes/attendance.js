@@ -36,7 +36,7 @@ router.post("/checkedIn", async (req, res) => {
 
             student.checkInTime.push(stdCheckedIN)
             await student.save()
-            res.status(200).send({ "message": "user check in successfuly" })
+           return  res.status(200).send({ "message": "user check in successfuly" })
 
 
         }else if (student && checktype=== 'checkout' ) {
@@ -46,7 +46,7 @@ router.post("/checkedIn", async (req, res) => {
 
             student.checkOutTime.push(stdCheckedIN)
             await student.save()
-            res.status(200).send({ "message": "user check out  successfuly"})
+           return  res.status(200).send({ "message": "user check out  successfuly"})
 
 
         }else {
@@ -55,14 +55,14 @@ router.post("/checkedIn", async (req, res) => {
             stdAttendance.checkInTime.push(stdCheckedIN)
 
             await stdAttendance.save()
-            res.status(200).send({ "message": "attendance done" })
+           return res.status(200).send({ "message": "attendance done" })
 
         }
 
         // res.status(200).send({ "message": "attendance done" })
     } catch (err) {
         console.log(err.message)
-        res.status(404).send({ "message": err.message })
+       return res.status(404).send({ "message": err.message })
     }
 })
 
